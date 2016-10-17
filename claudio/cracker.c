@@ -16,29 +16,26 @@ typedef struct {
   char *pwd;
 } crackWorker_t;
 
-void *crackWorker(void *params) {
+static void *crackWorker(void *params) {
   crackWorker_t *workerParams = (crackWorker_t *)params;
 
-  struct crypt_data *cdata =
-      (struct crypt_data *)malloc(sizeof(struct crypt_data));
-  cdata->initialized = 0;
+  struct crypt_data cdata;
+  cdata.initialized = 0;
 
-  pwdGenerator_t *pwdGenerator =
-      (pwdGenerator_t *)malloc(sizeof(pwdGenerator_t));
-  pwdGenerator->initialized = false;
+  pwdGenerator_t pwdGenerator;
+  pwdGenerator.initialized = false;
 
-  char *testPwd = getNthPassword(workerParams->start, pwdGenerator);
+  char *testPwd = getNthPassword(workerParams->start, &pwdGenerator);
   do {
-    char *hash = crypt_r(testPwd, workerParams->salt, cdata);
-    // printf("%s\t", testPwd);//, hash, workerParams->salt);
+    char *hash = crypt_r(testPwd, workerParams->salt, &cdata);
+
     if (!strcmp(hash, workerParams->hash)) {
       *(workerParams->found) = true;
       workerParams->pwd = testPwd;
       printf("Found %s\n", testPwd);
       return NULL;
     }
-  } while ((testPwd = getNthPassword(workerParams->step, pwdGenerator)) &&
-           !*(workerParams->found));
+  } while ((testPwd = getNthPassword(workerParams->step, &pwdGenerator)) && !*(workerParams->found));
 
   return NULL;
 }

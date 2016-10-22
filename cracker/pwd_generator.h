@@ -1,14 +1,12 @@
 /**
- * Time measure module.
- * Some functions that help to measure execution time of a particular code.
+ * Password generator module.
+ * Generate password by step using indexes from the charset (VALID_SYMBOLS)
  * Claudio Sousa, David Gonzalez
- * 18.10.2016
+ * 22.10.2016
  */
 
 #ifndef PWDGENERATOR_H
 #define PWDGENERATOR_H
-
-#include <stdbool.h>
 
 struct pwd_generator_t;
 typedef struct pwd_generator_t pwd_generator_t;

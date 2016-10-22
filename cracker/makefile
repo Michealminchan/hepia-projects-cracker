@@ -1,14 +1,14 @@
 FLAGS=-g -Wall -Wextra -std=gnu99 -D_GNU_SOURCE
-LIBS=-lpthread -lrt -lcrypt -lm
+LIBS=-lpthread -lrt -lcrypt
 
-main: cracker.o pwd_generator.o time_measure.o
+main: main.c cracker.o pwd_generator.o time_measure.o
 	gcc $(FLAGS) -o main main.c *.o $(LIBS)
 
 cracker.o: cracker.c cracker.h pwd_generator.h
-	gcc $(FLAGS) -c cracker.c 
+	gcc $(FLAGS) -c cracker.c
 
 pwd_generator.o: pwd_generator.c pwd_generator.h
-	gcc $(FLAGS) -c pwd_generator.c 
+	gcc $(FLAGS) -c pwd_generator.c
 
 time_measure.o: time_measure.c time_measure.h
 	gcc $(FLAGS) -c time_measure.c

@@ -1,0 +1,209 @@
+\documentclass[11pt, a4paper]{article}
+
+% Packages
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage[left=2cm, right=2cm, top=2cm, bottom=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{hyperref}
+
+\usepackage{float}
+
+\usepackage{graphicx}
+\graphicspath{{./img/}}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.13}
+
+\usepackage{listings}
+
+\usepackage{csvsimple}
+
+% Listings --------------------------------------------------------------------
+\lstset{
+    basicstyle=\ttfamily\small,
+    stringstyle=\ttfamily\color{green!50!black},
+    keywordstyle=\bfseries\color{blue},
+    commentstyle=\itshape\color{red!50!black},
+    showstringspaces=true,
+    tabsize=4,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny,
+    firstnumber=1,
+    stepnumber=1,
+    numbersep=5pt,
+    breaklines=true
+}
+
+% Reset paragraph indentation -------------------------------------------------
+\setlength{\parindent}{0cm}
+
+% Allow a paragraph to have a linebreak ---------------------------------------
+\newcommand{\paragraphnl}[1]{\paragraph{#1}\mbox{}\\}
+
+% PGF plot table key ----------------------------------------------------------
+% http://tex.stackexchange.com/questions/84541/simpler-boxplots-in-pgfplots-is-this-possible
+\pgfplotsset{
+    box plot/.style={
+        /pgfplots/.cd,
+        black,
+        only marks,
+        mark=-,
+        mark size=\pgfkeysvalueof{/pgfplots/box plot width},
+        /pgfplots/error bars/y dir=plus,
+        /pgfplots/error bars/y explicit,
+        /pgfplots/table/x index=\pgfkeysvalueof{/pgfplots/box plot x index},
+    },
+    box plot box/.style={
+        /pgfplots/error bars/draw error bar/.code 2 args={%
+            \draw  ##1 -- ++(\pgfkeysvalueof{/pgfplots/box plot width},0pt) |- ##2 -- ++(-\pgfkeysvalueof{/pgfplots/box plot width},0pt) |- ##1 -- cycle;
+        },
+        /pgfplots/table/.cd,
+        y index=\pgfkeysvalueof{/pgfplots/box plot box top index},
+        y error expr={
+            \thisrowno{\pgfkeysvalueof{/pgfplots/box plot box bottom index}}
+            - \thisrowno{\pgfkeysvalueof{/pgfplots/box plot box top index}}
+        },
+        /pgfplots/box plot
+    },
+    box plot top whisker/.style={
+        /pgfplots/error bars/draw error bar/.code 2 args={%
+            \pgfkeysgetvalue{/pgfplots/error bars/error mark}%
+            {\pgfplotserrorbarsmark}%
+            \pgfkeysgetvalue{/pgfplots/error bars/error mark options}%
+            {\pgfplotserrorbarsmarkopts}%
+            \path ##1 -- ##2;
+        },
+        /pgfplots/table/.cd,
+        y index=\pgfkeysvalueof{/pgfplots/box plot whisker top index},
+        y error expr={
+            \thisrowno{\pgfkeysvalueof{/pgfplots/box plot box top index}}
+            - \thisrowno{\pgfkeysvalueof{/pgfplots/box plot whisker top index}}
+        },
+        /pgfplots/box plot
+    },
+    box plot bottom whisker/.style={
+        /pgfplots/error bars/draw error bar/.code 2 args={%
+            \pgfkeysgetvalue{/pgfplots/error bars/error mark}%
+            {\pgfplotserrorbarsmark}%
+            \pgfkeysgetvalue{/pgfplots/error bars/error mark options}%
+            {\pgfplotserrorbarsmarkopts}%
+            \path ##1 -- ##2;
+        },
+        /pgfplots/table/.cd,
+        y index=\pgfkeysvalueof{/pgfplots/box plot whisker bottom index},
+        y error expr={
+            \thisrowno{\pgfkeysvalueof{/pgfplots/box plot box bottom index}}
+            - \thisrowno{\pgfkeysvalueof{/pgfplots/box plot whisker bottom index}}
+        },
+        /pgfplots/box plot
+    },
+    box plot median/.style={
+        /pgfplots/box plot,
+        /pgfplots/table/y index=\pgfkeysvalueof{/pgfplots/box plot median index}
+    },
+    box plot width/.initial=1em,
+    box plot x index/.initial=0,
+    box plot median index/.initial=1,
+    box plot box top index/.initial=2,
+    box plot box bottom index/.initial=3,
+    box plot whisker top index/.initial=4,
+    box plot whisker bottom index/.initial=5,
+}
+
+\newcommand{\boxplot}[2][]{
+    \addplot [box plot median,#1] table {#2};
+    \addplot [forget plot, box plot box,#1] table {#2};
+    \addplot [forget plot, box plot top whisker,#1] table {#2};
+    \addplot [forget plot, box plot bottom whisker,#1] table {#2};
+}
+
+% Page header and footer ------------------------------------------------------
+\pagestyle{fancy}
+\setlength{\headheight}{33pt}
+\renewcommand{\headrulewidth}{0.5pt}
+\lhead{\includegraphics[height=1cm]{hepia.jpg}}
+\chead{Cracker de mot de passe}
+\rhead{Claudio Sousa - David Gonzalez}
+\renewcommand{\footrulewidth}{0.5pt}
+\lfoot{22 octobre 2016}
+\cfoot{}
+\rfoot{Page \thepage /\pageref{LastPage}}
+
+% Table of contents depth -----------------------------------------------------
+\setcounter{tocdepth}{3}
+
+% Document --------------------------------------------------------------------
+\begin{document}
+
+\title
+{
+    \Huge{Programmation multi-threading} \\
+    \Huge{Cracker de mot de passe}
+}
+\author
+{
+    \LARGE{Claudio Sousa - David Gonzalez}
+}
+\date{22 octobre 2016}
+\maketitle
+
+\begin{center}
+    Image...%\includegraphics[scale=0.5]{image}
+\end{center}
+
+\thispagestyle{empty}
+
+\newpage
+
+% -----------------------------------------------------------------------------
+\section{Introduction}
+
+\newpage
+
+% -----------------------------------------------------------------------------
+\section{Graph}
+
+\begin{table}[H]
+    \begin{center}
+        \csvreader[
+            separator=tab,
+            no head,
+            tabular=|l|l|l|l|l|l|,
+            table head=\hline \textbf{Nombre de threads} & \textbf{Median} & \textbf{Boîte supérieur} & \textbf{Boîte inférieur} & \textbf{Meilleur cas} & \textbf{Pire cas} \\\hline\hline,
+            late after line=\\\hline
+        ]
+        {data/threads.csv}{}
+        {\csvcoli & \csvcolii & \csvcoliii & \csvcoliv & \csvcolv & \csvcolvi}
+    \end{center}
+    \caption{Comparaison des performances avec un nombre différent de threads}
+    \label{Comparaison des performances avec un nombre différent de threads}
+\end{table}
+
+\begin{figure}[H]
+    \begin{center}
+        \begin{tikzpicture}
+            \begin{semilogxaxis}[
+                    width=1.0\textwidth,
+                    xtick=data,
+                    log ticks with fixed point,
+                    x tick label style={/pgf/number format/1000 sep=\,},
+                    xlabel=Nombre de threads,
+                    ylabel=10000 tests/s
+                ]
+                \boxplot[forget plot, fill=lightgray] {data/threads.csv};
+                \addplot[color=red,mark=*,only marks] table[x index=0,y index=1]{data/threads_outlayer.csv};
+            \end{semilogxaxis}
+        \end{tikzpicture}
+    \end{center}
+    \caption{Comparaison des performances avec un nombre différent de threads}
+    \label{Comparaison des performances avec un nombre différent de threads}
+\end{figure}
+
+\newpage
+
+\end{document}

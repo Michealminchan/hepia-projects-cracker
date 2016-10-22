@@ -1,0 +1,14 @@
+# Latex tmp
+*.aux
+*.idx
+*.lof
+*.log
+*.lot
+*.out
+*.toc
+*.ilg
+*.ind
+*.gz
+*.nav
+*.snm
+*.lol

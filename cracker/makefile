@@ -19,6 +19,3 @@ clean:
 
 crack: main
 	./main 431pugYzZc5QM 43 16
-
-crack_test: main
-	./main 43oEb0lpjXzQc 43 16

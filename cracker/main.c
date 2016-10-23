@@ -12,7 +12,7 @@
 #include "time_measure.h"
 
 /**
- * Main function that cracks a pwd of 8 chars max and measure time taken.
+ * Main function that cracks a pwd of 8 chars max and measures the time taken.
  * @param argc arg count.
  * @param argc arg array.
  * @return The exit code

@@ -22,6 +22,7 @@
 
 \usepackage{csvsimple}
 
+\usepackage{color}
 % Listings --------------------------------------------------------------------
 \lstset{
     basicstyle=\ttfamily\small,
@@ -142,18 +143,20 @@
 
 \title
 {
-    \Huge{Programmation multi-threading} \\
-    \Huge{Cracker de mot de passe}
+    \Huge{Programmation concurrente} \\
+    \Huge{Password Cracker}
 }
 \author
 {
-    \LARGE{Claudio Sousa - David Gonzalez}
+	\LARGE{Claudio Sousa - David Gonzalez}
 }
 \date{22 octobre 2016}
 \maketitle
 
+\vspace{50pt}
+
 \begin{center}
-    Image...%\includegraphics[scale=0.5]{image}
+    \includegraphics[scale=.8]{frontpage.png}
 \end{center}
 
 \thispagestyle{empty}
@@ -162,27 +165,45 @@
 
 % -----------------------------------------------------------------------------
 \section{Introduction}
+\subsection{Division des tâches}
+Chaque membre du group a fait seul le programme dans son entièreté. Le travail rendu est la mise en commun du code des differents programmes.
 
-\newpage
+\subsection{Machine cible}
+\textbf{lscpu:}
+\begin{lstlisting}
+Architecture:          x86_64
+CPU op-mode(s):        32-bit, 64-bit
+Byte Order:            Little Endian
+CPU(s):                8
+On-line CPU(s) list:   0-7
+Thread(s) per core:    2
+Core(s) per socket:    4
+Socket(s):             1
+NUMA node(s):          1
+Vendor ID:             GenuineIntel
+CPU family:            6
+Model:                 60
+Stepping:              3
+CPU MHz:               800.000
+BogoMIPS:              7183.36
+Virtualization:        VT-x
+L1d cache:             32K
+L1i cache:             32K
+L2 cache:              256K
+L3 cache:              8192K
+NUMA node0 CPU(s):     0-7
+\end{lstlisting}
+
+
 
 % -----------------------------------------------------------------------------
-\section{Graph}
+\section{Thread performance comparison}
+\subsection{Méthodologie}
+\textcolor{red}{Afin de produire les données statistiques de performance, le cracker fut modifié afin de s'éxécuter pendant 10s et imprimer le nombre de mot de passes encryptées par seconde.
+Le cracker fut executé avec differents nombres de threads (2\textsuperscript{\{0..8\}}) et, pour chaque configuration, 20 executions ont été faites.}
 
-\begin{table}[H]
-    \begin{center}
-        \csvreader[
-            separator=tab,
-            no head,
-            tabular=|l|l|l|l|l|l|,
-            table head=\hline \textbf{Nombre de threads} & \textbf{Median} & \textbf{Boîte supérieur} & \textbf{Boîte inférieur} & \textbf{Meilleur cas} & \textbf{Pire cas} \\\hline\hline,
-            late after line=\\\hline
-        ]
-        {data/threads.csv}{}
-        {\csvcoli & \csvcolii & \csvcoliii & \csvcoliv & \csvcolv & \csvcolvi}
-    \end{center}
-    \caption{Comparaison des performances avec un nombre différent de threads}
-    \label{Comparaison des performances avec un nombre différent de threads}
-\end{table}
+\newpage
+\subsection{Données}
 
 \begin{figure}[H]
     \begin{center}
@@ -193,16 +214,35 @@
                     log ticks with fixed point,
                     x tick label style={/pgf/number format/1000 sep=\,},
                     xlabel=Nombre de threads,
-                    ylabel=10000 tests/s
+                    ylabel=10 \textsuperscript{6} pwds/s,
+                   %yscale=.9
                 ]
                 \boxplot[forget plot, fill=lightgray] {data/threads.csv};
-                \addplot[color=red,mark=*,only marks] table[x index=0,y index=1]{data/threads_outlayer.csv};
+                \addplot[color=gray,fill=white,mark=*,only marks] table[x index=0,y index=1]{data/threads_outlayer.csv};
             \end{semilogxaxis}
         \end{tikzpicture}
     \end{center}
     \caption{Comparaison des performances avec un nombre différent de threads}
     \label{Comparaison des performances avec un nombre différent de threads}
 \end{figure}
+
+
+\begin{table}[H]
+	\begin{center}
+		\csvreader[
+		separator=tab,
+		no head,
+		tabular=|l|l|l|l|l|l|,
+		table head=\hline \textbf{Nombre de threads} & \textbf{Median} & \textbf{Q3} & \textbf{Q1} & \textbf{Q4} & \textbf{Q0} \\\hline\hline,
+		late after line=\\\hline
+		]
+		{data/threads.csv}{}
+		{\csvcoli & \csvcolii & \csvcoliii & \csvcoliv & \csvcolv & \csvcolvi}
+	\end{center}
+	\caption{Comparaison des performances avec un nombre différent de threads}
+	\label{Comparaison des performances avec un nombre différent de threads}
+\end{table}
+
 
 \newpage
 

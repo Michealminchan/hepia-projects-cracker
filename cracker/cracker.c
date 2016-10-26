@@ -76,14 +76,14 @@ char *crack(char *hash, char *salt, int thread_count) {
         worker_params[i].pwd = &pwd_res;
 
         if (pthread_create(&threads[i], NULL, crack_worker, &(worker_params[i]))) {
-            fprintf(stderr, "pthread_create failed!\n");
+            perror("pthread_create failed!");
             return NULL;
         }
     }
 
     for (int i = 0; i < thread_count; i++) {
         if (pthread_join(threads[i], NULL)) {
-            fprintf(stderr, "pthread_join failed!\n");
+            perror("pthread_join failed!");
         }
     }
 

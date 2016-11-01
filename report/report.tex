@@ -130,7 +130,7 @@
 \chead{Cracker de mot de passe}
 \rhead{Claudio Sousa - David Gonzalez}
 \renewcommand{\footrulewidth}{0.5pt}
-\lfoot{22 octobre 2016}
+\lfoot{1 novembre 2016}
 \cfoot{}
 \rfoot{Page \thepage /\pageref{LastPage}}
 
@@ -149,7 +149,7 @@
 {
 	\LARGE{Claudio Sousa - David Gonzalez}
 }
-\date{22 octobre 2016}
+\date{1 novembre 2016}
 \maketitle
 
 \vspace{50pt}
@@ -198,8 +198,8 @@ NUMA node0 CPU(s):     0-7
 % -----------------------------------------------------------------------------
 \section{Thread performance comparison}
 \subsection{Méthodologie}
-\textcolor{red}{Afin de produire les données statistiques de performance, le cracker fut modifié afin de s'éxécuter pendant 10s et imprimer le nombre de mot de passes encryptées par seconde.
-Le cracker fut executé avec differents nombres de threads (2\textsuperscript{\{0..8\}}) et, pour chaque configuration, 20 executions ont été faites.}
+Afin de produire les données statistiques de performance, le cracker a été modifié afin de s'éxécuter pendant 10s et imprimer le nombre de mot de passes encryptées par seconde.
+20 testes ont été fais pour chaque nombre de threads utilisé  (2\textsuperscript{\{0..8\}})
 
 
 \subsection{Données}
@@ -226,6 +226,7 @@ Le cracker fut executé avec differents nombres de threads (2\textsuperscript{\{
 \end{figure}
 
 
+
 \begin{table}[H]
 	\begin{center}
 		\csvreader[
@@ -246,9 +247,41 @@ Le cracker fut executé avec differents nombres de threads (2\textsuperscript{\{
 \newpage
 \subsection{Questions \& réponses}
 \paragraphnl{Le gain de vitesse est linéaire avec le nombre de threads?}
-\textcolor{red}{TODO}
+Le gain de performance (mots de pass crackés par second) avec le nombre de threads est essentiellement linéaire (on ne double pas, mais presque) jusqu'au nombre de CPUs logiques sur la machine hôte. \\
+
+L'utilisation de threads supplémentaires n'augmente pas la performance. Au contraire, la performance diminue. 
+En effet, si nous avons déjà un thread par CPU logique, nous avons déjà un taux d'utilisation de 100\% pour chaque CPUs. Augmenter alors le nombre de threads utilisé ne permettra pas d'augmenter le taux d'utilisation des CPUs, et créera inévitablement une baisse de performance due au temps passé à changer de contexte.\\
+
+
+\begin{figure}[H]
+	\begin{center}
+		\begin{tikzpicture}
+			\begin{axis}[
+				 xlabel=Nombre de threads,
+				 ylabel=10 \textsuperscript{6} pwds/s,
+				xtick={1,2, 4, 8},
+				xmajorgrids=true,
+				grid style=dashed
+			]
+			\addplot[
+				color=blue,
+				mark=square,
+			]
+			coordinates {
+				(1, 0.421)(2,0.834 )( 4, 1.433)( 8, 2.089)
+			};
+			\end{axis}
+		\end{tikzpicture}
+	\end{center}
+    \caption{Comparison de la performance par thread avec axe des abscisses avec échelle linéaire}
+    \label{Comparison de la performance par thread avec axe des abscisses avec échelle linéaire}
+\end{figure}
+
 \paragraphnl{Quel est l'impact de l'hyper-threading sur les performances?}
-\textcolor{red}{TODO}
+Le hyper-threading permet de doubler le nombre de CPUs. Dans notre cas, malgré que la machine n'ait que 4 CPUs physiques, l'hyper-threading permet d'avoir 8 CPUs logiques à disposition. \\
 
-
+Chaque CPU logique possède son propre jeu de registres, mais la paire partage la même unité de calcul. Nous avons pu constater empiriquement que la ressource partagée entre chaque paire de CPUs logiques (l'ALU) ne semble pas être utilisée dans sa totalité par un seul CPU logique. En effet, l'utilisation du 2\textsuperscript{ème} CPU logique (sur le même CPU physique) permet, d'après nos résultats, de quasiment doubler les performances.
+ 
+\paragraphnl{Mot de passe trouvé}
+groumf (après 2h20m53s)
 \end{document}
